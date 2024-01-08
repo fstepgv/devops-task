@@ -2,6 +2,33 @@
 
 This documentation provides instructions on how to deploy a CloudFormation stack for a containerized web application on AWS ECS Fargate. The template sets up a VPC, subnets, an ECS cluster, an Application Load Balancer (ALB), and necessary roles and security groups.
 
+## Application Description
+
+The web application is a basic clicker app, consisting of the following files:
+
+- `Dockerfile`: Defines the Docker container configuration.
+- `index.html`: The front-end HTML file for the web application.
+- `app.js`: The Node.js script that handles the click event and logs it to AWS CloudWatch.
+
+These files are provided for reference. The actual Docker image used by the CloudFormation stack is pre-built and hosted on Docker Hub.
+
+## Stack Features
+
+- **Virtual Private Cloud (VPC)**: Creates an isolated network environment.
+- **Subnets**: Configures public and private subnets within the VPC.
+- **Internet Gateway**: Connects the VPC to the internet.
+- **ECS Cluster**: Hosts the ECS Fargate services and tasks.
+- **ECS Fargate Service and Task**: Manages and runs the containerized application.
+- **Application Load Balancer (ALB)**: Distributes incoming web traffic across multiple targets, such as ECS tasks, in multiple Availability Zones.
+- **Auto Scaling**: Automatically adjusts the number of ECS tasks based on the load.
+- **Security Groups**: Controls inbound and outbound traffic to the ECS service and ALB.
+- **Network ACLs**: Additional layer of security that acts as a firewall for controlling traffic in and out of the subnets.
+- **IAM Roles**: Provides necessary permissions for ECS tasks and Auto Scaling.
+- **CloudWatch Log Group**: Collects logs from the ECS tasks.
+- **SNS Topic**: For sending notifications, such as CloudWatch Alarm alerts.
+
+
+
 # Prerequisites
 
 - **AWS Account**: You must have an AWS account with appropriate permissions to create AWS resources like VPC, ECS, IAM roles, etc.
