@@ -324,15 +324,15 @@ Resources:
 
   # ALB Target Group to route traffic to the ECS service.
   ALBTargetGroup:
-  Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
-  Properties:
-    Port: 80
-    Protocol: 'HTTP'
-    VpcId: !Ref VPC
-    TargetType: 'ip'
-    HealthCheckProtocol: 'HTTP'
-    HealthCheckPort: '3000'
-    HealthCheckPath: '/'
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      Port: 80
+      Protocol: 'HTTP'
+      VpcId: !Ref VPC
+      TargetType: 'ip'
+      HealthCheckProtocol: 'HTTP'
+      HealthCheckPort: '3000'
+      HealthCheckPath: '/'
 
   # CloudWatch Log Group for storing logs from the ECS service.
   CloudWatchLogGroup:
