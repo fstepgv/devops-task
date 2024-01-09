@@ -28,14 +28,15 @@ Parameters:
     Type: String
     Default: '10.0.4.0/24'
     Description: 'CIDR block for Private Subnet 2'
+    
   TaskCpu:
     Type: String
-    Default: '256'
+    Default: '512'
     Description: 'The amount of CPU to allocate for the ECS Task'
 
   TaskMemory:
     Type: String
-    Default: '512'
+    Default: '1024'
     Description: 'The amount of memory (in MiB) to allocate for the ECS Task'
 
   MaxAutoScalingCapacity:
