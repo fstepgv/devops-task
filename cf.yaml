@@ -76,6 +76,18 @@ Resources:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 
+  NatGatewayEIP:
+    Type: 'AWS::EC2::EIP'
+    DependsOn: 'GatewayAttachment'
+    Properties:
+      Domain: 'vpc'
+
+  NatGateway:
+    Type: 'AWS::EC2::NatGateway'
+    Properties:
+      AllocationId: !GetAtt 'NatGatewayEIP.AllocationId'
+      SubnetId: !Ref PublicSubnet1  # Assuming NAT Gateway is placed in PublicSubnet1
+
   # Defines public subnets in a VPC
   PublicSubnet1:
     Type: 'AWS::EC2::Subnet'
@@ -108,28 +120,28 @@ Resources:
       CidrBlock: !Ref PrivateSubnet2Cidr
       AvailabilityZone: !Select [1, !GetAZs '']
 
-  # Private Route Table for the private subnets
-  PrivateRouteTable:
-    Type: 'AWS::EC2::RouteTable'
+
+  # Routes for Private Route Table
+  PrivateRouteToNAT:
+    Type: 'AWS::EC2::Route'
     Properties:
-      VpcId: !Ref VPC
-      Tags:
-        - Key: 'Name'
-          Value: 'PrivateRouteTable'
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: '0.0.0.0/0'
+      NatGatewayId: !Ref NatGateway
 
   # Association of Private Route Table with Private Subnet 1
   PrivateSubnet1RouteTableAssociation:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       SubnetId: !Ref PrivateSubnet1
-      RouteTableId: !Ref PrivateRouteTable
+      RouteTableId: !Ref PrivateRouteToNAT
 
   # Association of Private Route Table with Private Subnet 2
   PrivateSubnet2RouteTableAssociation:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       SubnetId: !Ref PrivateSubnet2
-      RouteTableId: !Ref PrivateRouteTable
+      RouteTableId: !Ref PrivateRouteToNAT
 
   #Creates a Network ACL for managing access to the public subnets.
   PublicNetworkAcl:
@@ -236,7 +248,6 @@ Resources:
       DesiredCount: 2
       NetworkConfiguration:
         AwsvpcConfiguration:
-          AssignPublicIp: ENABLED
           Subnets:
             - !Ref PrivateSubnet1
             - !Ref PrivateSubnet2
