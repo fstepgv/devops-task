@@ -120,7 +120,14 @@ Resources:
       CidrBlock: !Ref PrivateSubnet2Cidr
       AvailabilityZone: !Select [1, !GetAZs '']
 
-
+  PrivateRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: 'Name'
+          Value: 'PrivateRouteTable'
+          
   # Routes for Private Route Table
   PrivateRouteToNAT:
     Type: 'AWS::EC2::Route'
