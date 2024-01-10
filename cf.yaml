@@ -100,12 +100,36 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet1Cidr
       AvailabilityZone: !Select [0, !GetAZs '']
+      
   PrivateSubnet2:
     Type: 'AWS::EC2::Subnet'
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet2Cidr
       AvailabilityZone: !Select [1, !GetAZs '']
+
+  # Private Route Table for the private subnets
+  PrivateRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: 'Name'
+          Value: 'PrivateRouteTable'
+
+  # Association of Private Route Table with Private Subnet 1
+  PrivateSubnet1RouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable
+
+  # Association of Private Route Table with Private Subnet 2
+  PrivateSubnet2RouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRouteTable
 
   #Creates a Network ACL for managing access to the public subnets.
   PublicNetworkAcl:
@@ -212,6 +236,7 @@ Resources:
       DesiredCount: 2
       NetworkConfiguration:
         AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
           Subnets:
             - !Ref PrivateSubnet1
             - !Ref PrivateSubnet2
