@@ -347,6 +347,7 @@ Resources:
   # Application Load Balancer to distribute incoming traffic.
   ALB:
     Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    DependsOn: GatewayAttachment
     Properties:
       Subnets:
         - !Ref PublicSubnet1
