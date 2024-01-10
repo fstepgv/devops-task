@@ -141,14 +141,14 @@ Resources:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       SubnetId: !Ref PrivateSubnet1
-      RouteTableId: !Ref PrivateRouteToNAT
+      RouteTableId: !Ref PrivateRouteTable
 
   # Association of Private Route Table with Private Subnet 2
   PrivateSubnet2RouteTableAssociation:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       SubnetId: !Ref PrivateSubnet2
-      RouteTableId: !Ref PrivateRouteToNAT
+      RouteTableId: !Ref PrivateRouteTable
 
   #Creates a Network ACL for managing access to the public subnets.
   PublicNetworkAcl:
