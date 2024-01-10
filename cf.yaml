@@ -217,6 +217,19 @@ Resources:
       Egress: false
       RuleAction: 'allow'
       CidrBlock: '0.0.0.0/0'
+
+  InboundEphemeralRule:
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      NetworkAclId: !Ref PublicNetworkAcl
+      RuleNumber: 200
+      Protocol: '6' # TCP
+      PortRange:
+        From: '1024'
+        To: '65535'
+      Egress: false
+      RuleAction: 'allow'
+      CidrBlock: '0.0.0.0/0'
   
   # Outbound rule for the Network ACL allowing all traffic.
   OutboundRule:
