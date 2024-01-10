@@ -296,7 +296,8 @@ Resources:
   # ECS Cluster to host the application.
   ECSCluster:
     Type: 'AWS::ECS::Cluster'
-    ClusterName: !Ref ClusterName
+    Properties:
+      ClusterName: !Ref ClusterName
 
 
 
@@ -316,10 +317,10 @@ Resources:
   # ECS Service to manage and run ECS tasks.
   ECSService:
     Type: 'AWS::ECS::Service'
-    ServiceName: !Ref ServiceName
     DependsOn: 'ALBListener'
     Properties:
       Cluster: !Ref ECSCluster
+      ServiceName: !Ref ServiceName
       LaunchType: 'FARGATE'
       TaskDefinition: !Ref ECSTaskDefinition
       DesiredCount: 2
