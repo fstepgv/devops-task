@@ -105,6 +105,37 @@ Resources:
       MapPublicIpOnLaunch: true
       AvailabilityZone: !Select [1, !GetAZs '']
 
+  # Public Route Table for the VPC
+  PublicRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: 'Name'
+          Value: 'PublicRouteTable'
+
+  # Route for Public Route Table to the Internet Gateway
+  PublicRouteToIGW:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref InternetGateway
+
+  # Association of Public Route Table with Public Subnet 1
+  PublicSubnet1RouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
+
+  # Association of Public Route Table with Public Subnet 2
+  PublicSubnet2RouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref PublicRouteTable
+
   # Defines private subnets for ECS Fargate tasks.
   PrivateSubnet1:
     Type: 'AWS::EC2::Subnet'
