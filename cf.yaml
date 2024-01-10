@@ -358,6 +358,7 @@ Resources:
   # Scalable Target for the ECS service, defining the auto-scaling policy.
   ECSServiceScalableTarget:
     Type: 'AWS::ApplicationAutoScaling::ScalableTarget'
+    DependsOn: ECSService
     Properties:
       MaxCapacity: !Ref MaxAutoScalingCapacity
       MinCapacity: !Ref MinAutoScalingCapacity
