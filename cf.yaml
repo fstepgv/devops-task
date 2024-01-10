@@ -335,10 +335,15 @@ Resources:
     Properties:
       MaxCapacity: !Ref MaxAutoScalingCapacity
       MinCapacity: !Ref MinAutoScalingCapacity
-      ResourceId: !Sub 'service/${ECSCluster}/${ECSService}'  # Format: service/clusterName/serviceName
+      ResourceId: !Join 
+        - '/'
+        - - 'service'
+          - !Ref ECSCluster
+          - !GetAtt ECSService.Name
       RoleARN: !GetAtt AutoscalingRole.Arn
       ScalableDimension: 'ecs:service:DesiredCount'
       ServiceNamespace: 'ecs'
+
 
   # IAM Role for Application AutoScaling to modify ECS service.
   AutoscalingRole:
