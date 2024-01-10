@@ -3,7 +3,7 @@ Description: CloudFormation template for a containerized web application on AWS 
 
 # Parameters allow for customization of the CloudFormation stack without changing the template.
 Parameters:
-
+    
   VpcCidr:
     Type: String
     Default: '10.0.0.0/16'
@@ -53,6 +53,16 @@ Parameters:
     Type: String
     Default: 'fstep/devops-task:latest'
     Description: 'Docker image to be used in the ECS Task'
+
+  ClusterName:
+    Type: String
+    Default: 'devops-task-cluster'
+    Description: 'ECS cluster name'
+
+  ServiceName:
+    Type: String
+    Default: 'devops-task-service'
+    Description: 'ECS service name'
 
 # Define all the AWS resources to be created.
 
@@ -286,6 +296,7 @@ Resources:
   # ECS Cluster to host the application.
   ECSCluster:
     Type: 'AWS::ECS::Cluster'
+    ClusterName: !Ref ClusterName
 
 
 
@@ -305,6 +316,7 @@ Resources:
   # ECS Service to manage and run ECS tasks.
   ECSService:
     Type: 'AWS::ECS::Service'
+    ServiceName: !Ref ServiceName
     DependsOn: 'ALBListener'
     Properties:
       Cluster: !Ref ECSCluster
@@ -352,6 +364,16 @@ Resources:
       RoleARN: !GetAtt AutoscalingRole.Arn
       ScalableDimension: 'ecs:service:DesiredCount'
       ServiceNamespace: 'ecs'
+
+  ECSServiceScalableTarget:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      ServiceNamespace: 'ecs'
+      ScalableDimension: 'ecs:service:DesiredCount'
+      ResourceId: !Sub 'service/${ClusterName}/${ServiceName}'
+      MinCapacity: !Ref MinAutoScalingCapacity
+      MaxCapacity: !Ref MaxAutoScalingCapacity
+      RoleARN: !GetAtt AutoscalingRole.Arn
 
 
 
