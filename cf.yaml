@@ -358,8 +358,8 @@ Resources:
   # Scalable Target for the ECS service, defining the auto-scaling policy.
   ECSServiceScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
+    DependsOn: ECSService
     Properties:
-      DependsOn: ECSService
       ServiceNamespace: 'ecs'
       ScalableDimension: 'ecs:service:DesiredCount'
       ResourceId: !Sub 'service/${ClusterName}/${ServiceName}'
